@@ -39,3 +39,15 @@ vim.keymap.set("n", "<leader>sx", ":close<CR>")
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
+
+-- lsp
+vim.keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", { remap = false, silent=true })
+vim.keymap.set("n", "gr", "<cmd>Lspsaga lsp_finder<CR>", { remap = false, silent=true })
+vim.keymap.set("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>")
+vim.keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<CR>")
+vim.keymap.set("n","gd", "<cmd>Lspsaga goto_definition<CR>")
+vim.keymap.set("n", "<leader>e", "<cmd>Lspsaga show_line_diagnostics<CR>")
+vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc ++keep<CR>")
+
+
+

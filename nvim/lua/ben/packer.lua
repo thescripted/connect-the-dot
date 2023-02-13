@@ -24,31 +24,9 @@ return require('packer').startup(function(use)
 	use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
 	use('mbbill/undotree')
 	use('tpope/vim-fugitive')
-	use({
-		'VonHeikemen/lsp-zero.nvim',
-		requires = {
-			-- LSP Support
-			{'neovim/nvim-lspconfig'},
-			{'williamboman/mason.nvim'},
-			{'williamboman/mason-lspconfig.nvim'},
-
-			-- Autocompletion
-			{'hrsh7th/nvim-cmp'},
-			{'hrsh7th/cmp-buffer'},
-			{'hrsh7th/cmp-path'},
-			{'saadparwaiz1/cmp_luasnip'},
-			{'hrsh7th/cmp-nvim-lsp'},
-			{'hrsh7th/cmp-nvim-lua'},
-
-			-- Snippets
-			{'L3MON4D3/LuaSnip'},
-			{'rafamadriz/friendly-snippets'},
-		}
-	})
 
     use('ayu-theme/ayu-vim')
     use('christoomey/vim-tmux-navigator')
-    use('szw/vim-maximizer')
 
     -- file tree
     use('nvim-tree/nvim-tree.lua')
@@ -56,13 +34,31 @@ return require('packer').startup(function(use)
     -- copilot
     use('github/copilot.vim')
 
+    -- LSP
+    use {
+      'VonHeikemen/lsp-zero.nvim',
+      branch = 'v1.x',
+      requires = {
+        -- LSP Support
+        {'neovim/nvim-lspconfig'},             -- Required
+        {'williamboman/mason.nvim'},           -- Optional
+        {'williamboman/mason-lspconfig.nvim'}, -- Optional
+
+
+        -- Autocompletion
+        {'hrsh7th/nvim-cmp'},         -- Required
+        {'hrsh7th/cmp-nvim-lsp'},     -- Required
+
+        -- Snippets
+        {'L3MON4D3/LuaSnip'},             -- Required
+      }
+    }
+
     -- LSP Saga
     use({
-        'glepnir/lspsaga.nvim',
-        branch = 'main',
-        config = function()
-        end,
+        "glepnir/lspsaga.nvim",
+        branch = "main",
+        requires = { {"nvim-tree/nvim-web-devicons"} }
     })
-
 end)
 
