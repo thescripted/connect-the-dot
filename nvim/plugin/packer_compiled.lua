@@ -74,15 +74,15 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
-  ["ayu-vim"] = {
-    loaded = true,
-    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/ayu-vim",
-    url = "https://github.com/ayu-theme/ayu-vim"
-  },
   ["copilot.vim"] = {
     loaded = true,
     path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/copilot.vim",
     url = "https://github.com/github/copilot.vim"
+  },
+  ["nvim-lspconfig"] = {
+    loaded = true,
+    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
+    url = "https://github.com/neovim/nvim-lspconfig"
   },
   ["nvim-tree.lua"] = {
     loaded = true,
@@ -104,25 +104,25 @@ _G.packer_plugins = {
     path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
   },
+  ripgrep = {
+    loaded = true,
+    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/ripgrep",
+    url = "https://github.com/BurntSushi/ripgrep"
+  },
   ["rose-pine"] = {
     loaded = true,
     path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/rose-pine",
     url = "https://github.com/rose-pine/neovim"
   },
+  ["telescope-fzf-native.nvim"] = {
+    loaded = true,
+    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/telescope-fzf-native.nvim",
+    url = "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
+  },
   ["telescope.nvim"] = {
     loaded = true,
     path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
-  },
-  undotree = {
-    loaded = true,
-    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/undotree",
-    url = "https://github.com/mbbill/undotree"
-  },
-  ["vim-fugitive"] = {
-    loaded = true,
-    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/vim-fugitive",
-    url = "https://github.com/tpope/vim-fugitive"
   },
   ["vim-tmux-navigator"] = {
     loaded = true,

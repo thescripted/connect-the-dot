@@ -1,6 +1,4 @@
--- configure nvim-tree
 require("nvim-tree").setup({
-    -- change folder arrow icons
     renderer = {
         icons = {
             glyphs = {
@@ -21,13 +19,16 @@ require("nvim-tree").setup({
             },
         },
     },
-    -- 	git = {
-    -- 		ignore = false,
-    -- 	},
+    git = {
+        ignore = false,
+    },
     view = {
         adaptive_size = true
     }
 })
 
-vim.keymap.set("n", "<leader>n", vim.cmd.NvimTreeFindFile)
-vim.keymap.set("n", "<leader>t", vim.cmd.NvimTreeToggle)
+-- keymaps
+local opts = {noremap = true, silent = true}
+vim.api.nvim_set_keymap('n', '<leader>t', ':NvimTreeToggle<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>r', ':NvimTreeRefresh<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>n', ':NvimTreeFindFile<CR>', opts)
