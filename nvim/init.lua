@@ -31,6 +31,7 @@ o.colorcolumn = "100"
 o.foldmethod = "expr"
 o.foldexpr = "nvim_treesitter#foldexpr()"
 o.foldenable = false
+o.signcolumn = "no"
 
 vim.g.mapleader = " "
 
