@@ -94,10 +94,25 @@ _G.packer_plugins = {
     path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/cmp-path",
     url = "https://github.com/hrsh7th/cmp-path"
   },
+  ["cmp-vsnip"] = {
+    loaded = true,
+    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/cmp-vsnip",
+    url = "https://github.com/hrsh7th/cmp-vsnip"
+  },
   ["copilot.vim"] = {
     loaded = true,
     path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/copilot.vim",
     url = "https://github.com/github/copilot.vim"
+  },
+  harpoon = {
+    loaded = true,
+    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/harpoon",
+    url = "https://github.com/ThePrimeagen/harpoon"
+  },
+  moonfly = {
+    loaded = true,
+    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/moonfly",
+    url = "https://github.com/bluz71/vim-moonfly-colors"
   },
   ["nvim-cmp"] = {
     loaded = true,
@@ -149,10 +164,20 @@ _G.packer_plugins = {
     path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
+  ["vim-fugitive"] = {
+    loaded = true,
+    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/vim-fugitive",
+    url = "https://github.com/tpope/vim-fugitive"
+  },
   ["vim-tmux-navigator"] = {
     loaded = true,
     path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/vim-tmux-navigator",
     url = "https://github.com/christoomey/vim-tmux-navigator"
+  },
+  ["vim-vsnip"] = {
+    loaded = true,
+    path = "/Users/benjaminkinga/.local/share/nvim/site/pack/packer/start/vim-vsnip",
+    url = "https://github.com/hrsh7th/vim-vsnip"
   }
 }
 

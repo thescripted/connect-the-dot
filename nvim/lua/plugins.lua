@@ -29,6 +29,17 @@ return require('packer').startup(function()
 	use 'hrsh7th/vim-vsnip'
 
 	-- misc
-    use('christoomey/vim-tmux-navigator')
+        use('christoomey/vim-tmux-navigator')
 	use({ 'rose-pine/neovim', as = 'rose-pine' })
+
+	-- fugitive
+	use 'tpope/vim-fugitive'
+
+        -- harpoon
+	use 'ThePrimeagen/harpoon'
+
+	-- colorscheme
+	use { "bluz71/vim-moonfly-colors", as = "moonfly" }
+
 end)
+
