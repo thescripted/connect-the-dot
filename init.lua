@@ -4,6 +4,10 @@ vim.opt.relativenumber = true
 vim.opt.syntax = "on"
 vim.g.mapleader = ' '
 
+vim.g.loaded_netrw = 1 -- disable netrw for nvim.tree
+vim.g.loaded_netrwPlugin = 1
+vim.opt.termguicolors = true
+
 -- packer
 require('packer').startup(function(use)
 	use 'wbthomason/packer.nvim'
@@ -15,6 +19,7 @@ require('packer').startup(function(use)
 	use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 	use 'neovim/nvim-lspconfig'
 	use 'github/copilot.vim'
+	use 'nvim-tree/nvim-tree.lua'
 end)
 
 -- textDocument/diagnostic support until 0.10.0 is released
@@ -75,3 +80,11 @@ vim.keymap.set('n', '<C-p>', builtin.find_files, {})
 vim.keymap.set('n', '<leader>lg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<C-p>', builtin.find_files, {})
+
+-- nvimtree
+require('nvim-tree').setup{}
+
+
+-- TODO(ben): I think this belongs in the setup function of nvim-tree
+vim.keymap.set('n', '<leader>t', ':NvimTreeToggle<CR>', {})
+vim.keymap.set('n', '<leader>n', ':NvimTreeFindFile<CR>', {})
