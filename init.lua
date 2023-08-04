@@ -20,6 +20,7 @@ require('packer').startup(function(use)
 	use 'neovim/nvim-lspconfig'
 	use 'github/copilot.vim'
 	use 'nvim-tree/nvim-tree.lua'
+	use 'christoomey/vim-tmux-navigator'
 end)
 
 -- textDocument/diagnostic support until 0.10.0 is released
