@@ -65,14 +65,32 @@ local function setup_diagnostics(client, buffer)
   })
 end
 
--- ruby lsp configuration
+-- lsp configuration
 require('lspconfig').ruby_ls.setup({
   on_attach = function(client, buffer)
     setup_diagnostics(client, buffer)
   end,
 })
+require('lspconfig').tsserver.setup({})
+require('lspconfig').gopls.setup({})
+require('lspconfig').eslint.setup({
+	on_attach = function(client, buffer)
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			buffer = bufnr,
+			command = "EslintFixAll",
+		})
+	end,
+})
 
-vim.keymap.set('n', '<leader>gr', '<cmd>lua vim.lsp.buf.references()<CR>', {})
+-- keybindings for lsp
+vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', {})
+vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', {})
+vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {})
+vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', {})
+vim.keymap.set('n', 'ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {})
+vim.keymap.set('n', '<leader>E', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', {})
+vim.keymap.set('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', {})
+vim.keymap.set('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', {})
 
 -- telescope
 require('telescope').setup()
@@ -81,9 +99,14 @@ vim.keymap.set('n', '<C-p>', builtin.find_files, {})
 vim.keymap.set('n', '<leader>lg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<C-p>', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fw', builtin.grep_string, {})
 
 -- nvimtree
-require('nvim-tree').setup{}
+require('nvim-tree').setup{
+	view = {
+		width = {}
+	}
+}
 
 
 -- TODO(ben): I think this belongs in the setup function of nvim-tree
