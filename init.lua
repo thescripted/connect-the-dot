@@ -8,6 +8,15 @@ vim.g.loaded_netrw = 1 -- disable netrw for nvim.tree
 vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
 
+-- colorscheme
+vim.api.nvim_set_hl(0, 'NormalFloat', {
+	link = 'Normal',
+})
+vim.api.nvim_set_hl(0, 'FloatBorder', {
+	bg = 'none',
+})
+
+
 -- packer
 require('packer').startup(function(use)
 	use 'wbthomason/packer.nvim'
@@ -83,14 +92,12 @@ require('lspconfig').eslint.setup({
 })
 
 -- keybindings for lsp
-vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', {})
-vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', {})
-vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {})
-vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', {})
-vim.keymap.set('n', 'ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {})
-vim.keymap.set('n', '<leader>E', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', {})
-vim.keymap.set('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', {})
-vim.keymap.set('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', {})
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
+vim.keymap.set('n', 'gr', vim.lsp.buf.references, {})
+vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
+vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, {})
+vim.keymap.set('n', 'ca', vim.lsp.buf.code_action, {})
 
 -- telescope
 require('telescope').setup()
