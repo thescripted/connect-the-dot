@@ -30,7 +30,65 @@ require('packer').startup(function(use)
 	use 'github/copilot.vim'
 	use 'nvim-tree/nvim-tree.lua'
 	use 'christoomey/vim-tmux-navigator'
+	use 'neovim/nvim-lspconfig'
+
+	use 'hrsh7th/cmp-nvim-lsp'
+	use 'hrsh7th/cmp-buffer'
+	use 'hrsh7th/cmp-path'
+	use 'hrsh7th/cmp-cmdline'
+	use 'hrsh7th/nvim-cmp'
+	use 'hrsh7th/cmp-vsnip'
+	use 'hrsh7th/vim-vsnip'
 end)
+
+-- telescope
+require('telescope').setup()
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<C-p>', builtin.find_files, {})
+vim.keymap.set('n', '<leader>lg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+vim.keymap.set('n', '<C-p>', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fw', builtin.grep_string, {})
+
+-- nvimtree
+require('nvim-tree').setup{
+	view = {
+		width = {}
+	}
+}
+
+-- TODO(ben): I think this belongs in the setup function of nvim-tree
+vim.keymap.set('n', '<leader>t', ':NvimTreeToggle<CR>', {})
+vim.keymap.set('n', '<leader>n', ':NvimTreeFindFile<CR>', {})
+
+--
+local cmp = require('cmp')
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+    end,
+  },
+  window = {
+    -- completion = cmp.config.window.bordered(),
+    -- documentation = cmp.config.window.bordered(),
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' }, -- For vsnip users.
+  }, {
+    { name = 'buffer' },
+  })
+})
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- textDocument/diagnostic support until 0.10.0 is released
 _timers = {}
@@ -79,9 +137,14 @@ require('lspconfig').ruby_ls.setup({
   on_attach = function(client, buffer)
     setup_diagnostics(client, buffer)
   end,
+  capabilities = capabilities
 })
-require('lspconfig').tsserver.setup({})
-require('lspconfig').gopls.setup({})
+require('lspconfig').tsserver.setup({
+	capabilities = capabilities
+})
+require('lspconfig').gopls.setup({
+	capabilities = capabilities
+})
 require('lspconfig').eslint.setup({
 	on_attach = function(client, buffer)
 		vim.api.nvim_create_autocmd("BufWritePre", {
@@ -89,6 +152,7 @@ require('lspconfig').eslint.setup({
 			command = "EslintFixAll",
 		})
 	end,
+	capabilities = capabilities
 })
 
 -- keybindings for lsp
@@ -98,24 +162,3 @@ vim.keymap.set('n', 'gr', vim.lsp.buf.references, {})
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, {})
 vim.keymap.set('n', 'ca', vim.lsp.buf.code_action, {})
-
--- telescope
-require('telescope').setup()
-local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<C-p>', builtin.find_files, {})
-vim.keymap.set('n', '<leader>lg', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-vim.keymap.set('n', '<C-p>', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fw', builtin.grep_string, {})
-
--- nvimtree
-require('nvim-tree').setup{
-	view = {
-		width = {}
-	}
-}
-
-
--- TODO(ben): I think this belongs in the setup function of nvim-tree
-vim.keymap.set('n', '<leader>t', ':NvimTreeToggle<CR>', {})
-vim.keymap.set('n', '<leader>n', ':NvimTreeFindFile<CR>', {})
