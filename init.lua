@@ -1,164 +1,167 @@
-vim.opt.colorcolumn = "80" 
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.syntax = "on"
-vim.g.mapleader = ' '
-
-vim.g.loaded_netrw = 1 -- disable netrw for nvim.tree
-vim.g.loaded_netrwPlugin = 1
+vim.keymap.set("n", "<Space>", "<Nop>", { silent = true })
+vim.g.mapleader = " "
 vim.opt.termguicolors = true
 
--- colorscheme
-vim.api.nvim_set_hl(0, 'NormalFloat', {
-	link = 'Normal',
-})
-vim.api.nvim_set_hl(0, 'FloatBorder', {
-	bg = 'none',
-})
+vim.opt.number = true
+vim.opt.relativenumber = true
+
+vim.opt.scrolloff = 4
+vim.opt.softtabstop = 8
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 8
+
+vim.opt.wrap = false
+-- vim.opt.undodir = "Users/benjaminkinga/.vimdid"
+vim.opt.undofile = true
+vim.opt.hidden = true
+
+vim.opt.colorcolumn = "100"
 
 
--- packer
-require('packer').startup(function(use)
-	use 'wbthomason/packer.nvim'
-	use {
-	  'nvim-telescope/telescope.nvim', tag = '0.1.2',
-	-- or                            , branch = '0.1.x',
-	  requires = { {'nvim-lua/plenary.nvim'} }
-	}
-	use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-	use 'neovim/nvim-lspconfig'
-	use 'github/copilot.vim'
-	use 'nvim-tree/nvim-tree.lua'
-	use 'christoomey/vim-tmux-navigator'
-	use 'neovim/nvim-lspconfig'
+local Plug = vim.fn['plug#']
+vim.call('plug#begin')
 
-	use 'hrsh7th/cmp-nvim-lsp'
-	use 'hrsh7th/cmp-buffer'
-	use 'hrsh7th/cmp-path'
-	use 'hrsh7th/cmp-cmdline'
-	use 'hrsh7th/nvim-cmp'
-	use 'hrsh7th/cmp-vsnip'
-	use 'hrsh7th/vim-vsnip'
-end)
+Plug('junegunn/fzf', { ['dir'] = '~/.fzf' })
+Plug('nvim-lua/plenary.nvim')
+Plug('nvim-telescope/telescope.nvim', { ['tag'] = '0.1.6' })
+Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate'})
+Plug('neovim/nvim-lspconfig')
+Plug('alexghergh/nvim-tmux-navigation')
+Plug('RRethy/base16-nvim')
+Plug('hrsh7th/nvim-cmp') -- Autocompletion plugin
+Plug('hrsh7th/cmp-nvim-lsp') -- LSP source for nvim-cmp
+Plug('saadparwaiz1/cmp_luasnip') -- Snippets source for nvim-cmp
+Plug('L3MON4D3/LuaSnip') -- Snippets plugin
+Plug('sourcegraph/sg.nvim', { ['do'] = 'nvim -l build/init.lua' })
+Plug('nvim-lua/plenary.nvim')
 
--- telescope
-require('telescope').setup()
+vim.call('plug#end')
+
+-- telescope config
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<C-p>', builtin.find_files, {})
 vim.keymap.set('n', '<leader>lg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-vim.keymap.set('n', '<C-p>', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fw', builtin.grep_string, {})
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
--- nvimtree
-require('nvim-tree').setup{
-	view = {
-		width = {}
-	}
+-- treesitter config
+require('nvim-treesitter.configs').setup {
+    ensure_installed = { "rust", "lua", "javascript", "typescript", "go" },
 }
 
--- TODO(ben): I think this belongs in the setup function of nvim-tree
-vim.keymap.set('n', '<leader>t', ':NvimTreeToggle<CR>', {})
-vim.keymap.set('n', '<leader>n', ':NvimTreeFindFile<CR>', {})
 
---
-local cmp = require('cmp')
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-    end,
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+vim.keymap.set('n', '<space>f', function()
+  vim.lsp.buf.format { async = true }
+end, opts)
+
+
+-- autocomplete
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+-- lsp configs & autocompletes
+local lspconfig = require('lspconfig')
+lspconfig.flow.setup{
+    capabilities = capabilities,
+}
+lspconfig.tsserver.setup{
+    capabilities = capabilities,
+}
+lspconfig.rust_analyzer.setup{
+    capabilities = capabilities,
+}
+
+lspconfig.gopls.setup { -- is all of this needed?
+  on_attach = on_attach,
+  capabilities = capabilities,
+  cmd = {"gopls"},
+  filetypes = { "go", "gomod", "gowork", "gotmpl" },
+  settings = {
+    gopls = {
+      completeUnimported = true,
+      usePlaceholders = true,
+      analyses = {
+        unusedparams = true,
+      },
+    },
   },
-  window = {
-    -- completion = cmp.config.window.bordered(),
-    -- documentation = cmp.config.window.bordered(),
+}
+
+-- nvim-cmp setup
+local luasnip = require 'luasnip'
+local cmp = require 'cmp'
+cmp.setup {
+   snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
   },
   mapping = cmp.mapping.preset.insert({
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
+    ['<C-d>'] = cmp.mapping.scroll_docs(4), -- Down
+    -- C-b (back) C-f (forward) for snippet placeholder navigation.
     ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    ['<CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
   }),
-  sources = cmp.config.sources({
+  sources = {
+ --   { name = 'cody' },
     { name = 'nvim_lsp' },
-    { name = 'vsnip' }, -- For vsnip users.
-  }, {
-    { name = 'buffer' },
-  })
+    { name = 'luasnip' },
+  },
+}
+
+
+-- tmux navigation
+local nvim_tmux_nav = require('nvim-tmux-navigation')
+
+-- TODO(ben): this is very slow for some reason...
+vim.keymap.set('n', "<C-h>", nvim_tmux_nav.NvimTmuxNavigateLeft)
+vim.keymap.set('n', "<C-j>", nvim_tmux_nav.NvimTmuxNavigateDown)
+vim.keymap.set('n', "<C-k>", nvim_tmux_nav.NvimTmuxNavigateUp)
+vim.keymap.set('n', "<C-l>", nvim_tmux_nav.NvimTmuxNavigateRight)
+vim.keymap.set('n', "<C-\\>", nvim_tmux_nav.NvimTmuxNavigateLastActive)
+vim.keymap.set('n', "<C-Space>", nvim_tmux_nav.NvimTmuxNavigateNext)
+
+-- colorscheme
+vim.cmd('colorscheme base16-tokyo-city-dark')
+
+
+-- other nice keymapping
+vim.keymap.set('n', "<leader><Space>", ":e #<CR>")-- go to previous buffer
+
+-- require("sg").setup{}
+
+vim.lsp.start({
+    name = "lsp-server-example",
+    cmd = {'lsp'},
+    root_dir = vim.fs.dirname(vim.fs.find('example.lsp', { upward = true })[1])
 })
-
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
--- textDocument/diagnostic support until 0.10.0 is released
-_timers = {}
-local function setup_diagnostics(client, buffer)
-  if require("vim.lsp.diagnostic")._enable then
-    return
-  end
-
-  local diagnostic_handler = function()
-    local params = vim.lsp.util.make_text_document_params(buffer)
-    client.request("textDocument/diagnostic", { textDocument = params }, function(err, result)
-      if err then
-        local err_msg = string.format("diagnostics error - %s", vim.inspect(err))
-        vim.lsp.log.error(err_msg)
-      end
-      if not result then
-        return
-      end
-      vim.lsp.diagnostic.on_publish_diagnostics(
-        nil,
-        vim.tbl_extend("keep", params, { diagnostics = result.items }),
-        { client_id = client.id }
-      )
-    end)
-  end
-
-  diagnostic_handler() -- to request diagnostics on buffer when first attaching
-
-  vim.api.nvim_buf_attach(buffer, false, {
-    on_lines = function()
-      if _timers[buffer] then
-        vim.fn.timer_stop(_timers[buffer])
-      end
-      _timers[buffer] = vim.fn.timer_start(200, diagnostic_handler)
-    end,
-    on_detach = function()
-      if _timers[buffer] then
-        vim.fn.timer_stop(_timers[buffer])
-      end
-    end,
-  })
-end
-
--- lsp configuration
-require('lspconfig').ruby_ls.setup({
-  on_attach = function(client, buffer)
-    setup_diagnostics(client, buffer)
-  end,
-  capabilities = capabilities
-})
-require('lspconfig').tsserver.setup({
-	capabilities = capabilities
-})
-require('lspconfig').gopls.setup({
-	capabilities = capabilities
-})
-require('lspconfig').eslint.setup({
-	on_attach = function(client, buffer)
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			buffer = bufnr,
-			command = "EslintFixAll",
-		})
-	end,
-	capabilities = capabilities
-})
-
--- keybindings for lsp
-vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
-vim.keymap.set('n', 'gr', vim.lsp.buf.references, {})
-vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
-vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, {})
-vim.keymap.set('n', 'ca', vim.lsp.buf.code_action, {})
